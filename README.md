@@ -120,6 +120,33 @@ curl http://192.168.49.2:30241/products
 
 Replace `192.168.49.2` and the ports with the actual IP and port numbers from the `minikube service list` command.
 
+### Project architecture
+
+```
+Laptop (Minikube)
+|
+|--- Home Router (NAT)
+|   |
+|   |--- Internet (Blocked from external access)
+|
+|--- Minikube Cluster
+    |
+    |--- Jenkins Pod
+    |    |--- Jenkins Server
+    |         |--- Accessible via: http://192.168.49.2:30558
+    |
+    |--- Other Service Pods (order-service, user-service, product-service)
+
+```
+
+#### Explanation
+
+1. **Laptop (Minikube)** : Your local machine running Minikube to create a Kubernetes cluster.
+2. **Home Router (NAT)** : Provides Network Address Translation (NAT), which helps in isolating your local network from the Internet. Only devices within your home network can access your Minikube cluster.
+3. **Minikube Cluster** : This is where your Kubernetes cluster runs. Minikube sets up a single-node Kubernetes cluster within a VM on your laptop.
+4. **Jenkins Pod** : The Jenkins service runs inside a pod in the Minikube cluster. It is accessible locally through the NodePort service exposed by Minikube (`http://192.168.49.2:30558`).
+5. **Other Service Pods** : Additional services (order-service, user-service, product-service) running within the same Minikube cluster.
+
 ### Final Notes
 
 - **Building Images**: Ensure that Docker images are correctly built and tagged.
