@@ -1,7 +1,4 @@
 
-Sure! Here's a more humanized and clear documentation for deploying your microservices on Kubernetes using Minikube.
-
----
 
 ## Deploying Microservices on Kubernetes locally with Minikube
 
