@@ -1,8 +1,11 @@
-## Managing microservices locally with Jenkins and Minikube with Persistent Stora
+## Managing microservices locally with Jenkins and Minikube with Persistent Storage
+
+<img src="image/jenkins.png" alt="Jenkins Dashboard" width="600" />
+
 
 ### Prerequisites
 
-Before we start, make sure you have the following: 
+Before we start, make sure you have the following:
 
 1. **Minikube** installed.
 2. **kubectl** installed. Or you could run:
