@@ -17,7 +17,7 @@ spec:
         image: jenkins/jenkins:lts
         ports:
         - containerPort: 8080
-        - containerPort: 50000  # Este puerto es opcional si no usas agentes
+        - containerPort: 50000  
         volumeMounts:
         - name: jenkins-home
           mountPath: /var/jenkins_home
