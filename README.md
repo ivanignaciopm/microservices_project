@@ -1,6 +1,4 @@
-
-
-## Deploying Microservices on Kubernetes locally with Minikube
+## Managing microservices locally with Jenkins and Minikube with Persistent Storage
 
 ### Prerequisites
 
@@ -12,7 +10,7 @@ Before we start, make sure you have the following:
    ```
    alias kubectl="minikube kubectl --"
    ```
-3. Clone your project repository:
+3. Clone the project repository:
 
    ```bash
    git clone https://github.com/ivanignaciopm/microservices_project.git
@@ -61,6 +59,7 @@ kubectl apply -f ./order-service/deployment.yaml
 
 # Deploy the product-service
 kubectl apply -f ./product-service/deployment.yaml
+
 ```
 
 #### 5. Check the Status of Pods and Services
@@ -117,47 +116,49 @@ curl http://192.168.49.2:30241/products
 
 Replace `192.168.49.2` and the ports with the actual IP and port numbers from the `minikube service list` command.
 
-### Project architecture
+### Jenkins
+
+#### Deploying the PV and PVC
+
+Run these commands in this order to create the PV, PVC and connect them:
 
 ```
-Laptop (Minikube)
-|
-|--- Home Router (NAT)
-|   |
-|   |--- Internet (Blocked from external access)
-|
-|--- Minikube Cluster
-    |
-    |--- Jenkins Pod
-    |    |--- Jenkins Server
-    |         |--- Accessible via: http://192.168.49.2:30558
-    |
-    |--- Other Service Pods (order-service, user-service, product-service)
+kubectl apply -f ./jenkins/jenkins-pv.yaml
+kubectl apply -f ./jenkins/jenkins-pvc.yaml
 
 ```
 
-#### Explanation
+### Deploy jenkins
 
-1. **Laptop (Minikube)** : Your local machine running Minikube to create a Kubernetes cluster.
-2. **Home Router (NAT)** : Provides Network Address Translation (NAT), which helps in isolating your local network from the Internet. Only devices within your home network can access your Minikube cluster.
-3. **Minikube Cluster** : This is where your Kubernetes cluster runs. Minikube sets up a single-node Kubernetes cluster within a VM on your laptop.
-4. **Jenkins Pod** : The Jenkins service runs inside a pod in the Minikube cluster. It is accessible locally through the NodePort service exposed by Minikube (`http://192.168.49.2:30558`).
-5. **Other Service Pods** : Additional services (order-service, user-service, product-service) running within the same Minikube cluster.
+```
+kubectl apply -f ./jenkins/deployment.yaml
+```
 
-### Final Notes
+### Password Admin
 
-- **Building Images**: Ensure that Docker images are correctly built and tagged.
-- **Checking Logs**: If a service isn't working, check the logs for any errors:
+- **Checking Logs**: If a service isn't working, check the logs for any errors. You can find the Admin password here also.
 
   ```bash
   kubectl logs <pod-name>
   ```
-- **Accessing Jenkins**: If you need to access Jenkins, get the initial admin password with:
+- **Accessing Jenkins**: If you need to access the Jenkins container run:
 
   ```bash
-  kubectl exec --namespace default -it <jenkins-pod-name> -- /bin/cat /var/jenkins_home/secrets/initialAdminPassword
+  kubectl exec -it <jenkins-pod-name> -- /bin/cat 
   ```
 
-And that's it! You should now have your microservices running on Kubernetes with Minikube. 
+  Here you could check if the plugins are installed correctly in the PV. so you will find them there when you restart the pod
+
+  ```
+  ls /var/jenkins_home/plugins
+  ```
+
+  To restart the pod just delete it:
+
+  ```
+  kubectl delete pod <jenkins-pod-name>
+  ```
+
+And that's it! You should now have your microservices running on Kubernetes with Minikube.
 
 If you would like to contribute to this project, feel free to do it.
