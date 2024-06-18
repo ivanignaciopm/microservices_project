@@ -1,4 +1,4 @@
-## Managing microservices locally with Jenkins and Minikube with Persistent Storage
+## Managing microservices locally with Jenkins and Minikube with Persistent Stora
 
 ### Prerequisites
 
